@@ -1,0 +1,26 @@
+services:
+  # Data base
+  db_postgres:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    environment:
+      - POSTGRES_DB=hw02
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=567234
+    ports: 
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Fast API
+  fastapi_app:
+    build: .
+    container_name: fastapi_web
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db_postgres
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://postgres:567234@db_postgres:5432/hw02
+volumes:
+  postgres_data:
